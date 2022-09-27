@@ -1153,7 +1153,10 @@ function onSelectMultiFactorHint(index) {
     // Clear all input.
     $('#multi-factor-sign-in-verification-id').val('');
     $('#multi-factor-sign-in-verification-code').val('');
-  } else {
+  } else if(multiFactorErrorResolver.hints[index].factorId === 'totp'){
+    alertError('Working on Totp');
+  } 
+  else {
     // 2nd factor not found or not supported by app.
     alertError('Selected 2nd factor is not supported!');
   }
