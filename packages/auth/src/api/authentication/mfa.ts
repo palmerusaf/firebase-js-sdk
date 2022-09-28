@@ -23,7 +23,7 @@ import {
 } from '../index';
 import { Auth } from '../../model/public_types';
 import { IdTokenResponse } from '../../model/id_token';
-import { MfaEnrollment, TotpVerificationInfo } from '../account_management/mfa';
+import { MfaEnrollment } from '../account_management/mfa';
 import { SignInWithIdpResponse } from './idp';
 import {
   SignInWithPhoneNumberRequest,
