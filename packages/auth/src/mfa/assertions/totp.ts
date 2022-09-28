@@ -158,15 +158,20 @@ export class TotpMultiFactorAssertionImpl
     auth: AuthInternal,
     mfaPendingCredential: string,
   ): Promise<FinalizeMfaResponse> {
+   
+    console.log("Secret: ", this.secret);
+    console.log("_finalizeSingnIn called with ", this.enrollmentId, " ", this.otp);
     _assert(
       typeof this.enrollmentId !== 'undefined'
       && typeof this.otp !== 'undefined',
       auth,
       AuthErrorCode.ARGUMENT_ERROR
     );
+    let totpVerificationInfo = {'verificationCode': this.otp};
+    
     return finalizeSignInTotpMfa(auth, {
       mfaPendingCredential,
-      verificationCode: this.otp,
+      totpVerificationInfo: totpVerificationInfo,
       mfaEnrollmentId: this.enrollmentId
     });
   }

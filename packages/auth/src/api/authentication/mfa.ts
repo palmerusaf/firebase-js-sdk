@@ -111,7 +111,7 @@ export interface FinalizePhoneMfaSignInRequest {
 
 export interface FinalizeTotpMfaSignInRequest {
   mfaPendingCredential: string;
-  verificationCode: string
+  totpVerificationInfo: {verificationCode: string}
   tenantId?: string;
   mfaEnrollmentId?: string
 }
@@ -140,6 +140,11 @@ export function finalizeSignInTotpMfa(
   auth: Auth,
   request: FinalizeTotpMfaSignInRequest
 ): Promise<FinalizeTotpMfaSignInResponse> {
+
+  console.log("finalizeSignInTotpMfa");
+  console.log(auth);
+  console.log(request);
+
   return _performApiRequest<
     FinalizeTotpMfaSignInRequest,
     FinalizeTotpMfaSignInResponse

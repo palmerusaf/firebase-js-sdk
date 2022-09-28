@@ -1068,6 +1068,7 @@ function handleMultiFactorSignIn(resolver) {
   );
   // Hide phone form (other second factor types could be supported).
   $('#multi-factor-phone').addClass('hidden');
+  $('#multi-factor-totp').addClass('hidden');
   // Show second factor recovery dialog.
   $('#multiFactorModal').modal();
 }
@@ -1086,6 +1087,7 @@ function handleMultiFactorSignIn(resolver) {
 function showMultiFactors($listGroup, multiFactorInfo, onClick, onDelete) {
   // Append entry to list.
   $listGroup.empty();
+  console.log("showMultiFactors");
   $.each(multiFactorInfo, i => {
     // Append entry to list.
     const info = multiFactorInfo[i];
@@ -1133,7 +1135,9 @@ function showMultiFactors($listGroup, multiFactorInfo, onClick, onDelete) {
 function onSelectMultiFactorHint(index) {
   // Hide all forms for handling each type of second factors.
   // Currently only phone is supported.
+  console.log("onSelectMultiFactorHint called", multiFactorErrorResolver.hints[index].factorId);
   $('#multi-factor-phone').addClass('hidden');
+  $('#multi-factor-totp').addClass('hidden');
   if (
     !multiFactorErrorResolver ||
     typeof multiFactorErrorResolver.hints[index] === 'undefined'
@@ -1154,7 +1158,14 @@ function onSelectMultiFactorHint(index) {
     $('#multi-factor-sign-in-verification-id').val('');
     $('#multi-factor-sign-in-verification-code').val('');
   } else if(multiFactorErrorResolver.hints[index].factorId === 'totp'){
-    alertError('Working on Totp');
+    // Save selected second factor.
+    selectedMultiFactorHint = multiFactorErrorResolver.hints[index];
+  
+    // Show sign-in with totp second factor menu.
+    $('#multi-factor-totp').removeClass('hidden');
+    // Clear all input.
+    $('#multi-factor-totp-sign-in-verification-code').val('');
+    console.log("code",$('#multi-factor-totp-sign-in-verification-code').val());
   } 
   else {
     // 2nd factor not found or not supported by app.
@@ -1208,6 +1219,28 @@ function onFinalizeSignInWithPhoneMultiFactor(event) {
     onAuthUserCredentialSuccess(userCredential);
     $('#multiFactorModal').modal('hide');
   }, onAuthError);
+}
+
+/**
+ * Completes sign-in with the 2nd factor totp assertion.
+ * @param {!jQuery.Event} event The jQuery event object.
+ */
+function onFinalizeSignInWithTotpMultiFactor(event){
+  event.preventDefault();
+  // Make sure a second factor is selected.
+  console.log(selectedMultiFactorHint, multiFactorErrorResolver);
+  const otp =  $('#multi-factor-totp-sign-in-verification-code').val();
+  console.log("otp ",otp);
+  console.log($('#multiFactorModal :input'));
+  if (!otp || !selectedMultiFactorHint || !multiFactorErrorResolver) {
+    return;
+  }
+  
+  const assertion = TotpMultiFactorGenerator.assertionForSignIn(selectedMultiFactorHint.uid, otp)
+  multiFactorErrorResolver.resolveSignIn(assertion).then(userCredential => {
+    onAuthUserCredentialSuccess(userCredential);
+    $('#multiFactorModal').modal('hide');
+  }, onAuthError)
 }
 
 /**
@@ -1988,6 +2021,14 @@ function initApp() {
   $('#sign-in-with-phone-multi-factor').click(
     onFinalizeSignInWithPhoneMultiFactor
   );
+
+
+  // Completes multi-factor sign-in with supplied SMS code.
+  $('#sign-in-with-totp-multi-factor').click(
+    onFinalizeSignInWithTotpMultiFactor
+  );
+
+
   // Starts multi-factor enrollment with phone number.
   $('#enroll-mfa-verify-phone-number').click(onStartEnrollWithPhoneMultiFactor);
   // Completes multi-factor enrollment with supplied SMS code.
