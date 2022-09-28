@@ -1087,7 +1087,6 @@ function handleMultiFactorSignIn(resolver) {
 function showMultiFactors($listGroup, multiFactorInfo, onClick, onDelete) {
   // Append entry to list.
   $listGroup.empty();
-  console.log("showMultiFactors");
   $.each(multiFactorInfo, i => {
     // Append entry to list.
     const info = multiFactorInfo[i];
@@ -1135,7 +1134,6 @@ function showMultiFactors($listGroup, multiFactorInfo, onClick, onDelete) {
 function onSelectMultiFactorHint(index) {
   // Hide all forms for handling each type of second factors.
   // Currently only phone is supported.
-  console.log("onSelectMultiFactorHint called", multiFactorErrorResolver.hints[index].factorId);
   $('#multi-factor-phone').addClass('hidden');
   $('#multi-factor-totp').addClass('hidden');
   if (
@@ -1165,7 +1163,6 @@ function onSelectMultiFactorHint(index) {
     $('#multi-factor-totp').removeClass('hidden');
     // Clear all input.
     $('#multi-factor-totp-sign-in-verification-code').val('');
-    console.log("code",$('#multi-factor-totp-sign-in-verification-code').val());
   } 
   else {
     // 2nd factor not found or not supported by app.
@@ -1228,10 +1225,7 @@ function onFinalizeSignInWithPhoneMultiFactor(event) {
 function onFinalizeSignInWithTotpMultiFactor(event){
   event.preventDefault();
   // Make sure a second factor is selected.
-  console.log(selectedMultiFactorHint, multiFactorErrorResolver);
   const otp =  $('#multi-factor-totp-sign-in-verification-code').val();
-  console.log("otp ",otp);
-  console.log($('#multiFactorModal :input'));
   if (!otp || !selectedMultiFactorHint || !multiFactorErrorResolver) {
     return;
   }
@@ -1372,7 +1366,6 @@ function signInWithPopupRedirect(provider) {
       customParameters[key] = value;
     }
   });
-  console.log('customParameters: ', customParameters);
   // For older jscore versions that do not support this.
   if (provider.setCustomParameters) {
     // Set custom parameters on current provider.
