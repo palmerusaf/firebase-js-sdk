@@ -140,11 +140,6 @@ export function finalizeSignInTotpMfa(
   auth: Auth,
   request: FinalizeTotpMfaSignInRequest
 ): Promise<FinalizeTotpMfaSignInResponse> {
-
-  console.log("finalizeSignInTotpMfa");
-  console.log(auth);
-  console.log(request);
-
   return _performApiRequest<
     FinalizeTotpMfaSignInRequest,
     FinalizeTotpMfaSignInResponse
