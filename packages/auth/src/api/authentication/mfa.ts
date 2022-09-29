@@ -60,7 +60,6 @@ export interface StartTotpMfaSignInRequest {
   tenantId?: string;
 }
 
-
 export interface StartPhoneMfaSignInResponse {
   phoneResponseInfo: {
     sessionInfo: string;
@@ -111,15 +110,14 @@ export interface FinalizePhoneMfaSignInRequest {
 
 export interface FinalizeTotpMfaSignInRequest {
   mfaPendingCredential: string;
-  totpVerificationInfo: {verificationCode: string}
+  totpVerificationInfo: { verificationCode: string };
   tenantId?: string;
-  mfaEnrollmentId: string
+  mfaEnrollmentId: string;
 }
 
 export interface FinalizePhoneMfaSignInResponse extends FinalizeMfaResponse {}
 
 export interface FinalizeTotpMfaSignInResponse extends FinalizeMfaResponse {}
-
 
 export function finalizeSignInPhoneMfa(
   auth: Auth,
@@ -150,7 +148,6 @@ export function finalizeSignInTotpMfa(
     _addTidIfNecessary(auth, request)
   );
 }
-
 
 /**
  * @internal
