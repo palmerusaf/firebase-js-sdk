@@ -33,8 +33,7 @@ import {
   TotpMultiFactorGenerator,
   TotpSecret
 } from './totp';
-import {
-  FactorId, TotpMultiFactorAssertion} from '../../model/public_types';
+import { FactorId } from '../../model/public_types';
 import { AuthErrorCode } from '../../core/errors';
 import { AppName } from '../../model/auth';
 import { _castAuth } from '../../core/auth/auth_impl';
