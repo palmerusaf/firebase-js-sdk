@@ -26,7 +26,6 @@ import { MultiFactorSessionImpl } from '../../mfa/mfa_session';
 import { StartTotpMfaEnrollmentResponse } from '../../api/account_management/mfa';
 import {
   FinalizeMfaResponse,
-  StartTotpMfaSignInRequest,
   StartTotpMfaSignInResponse
 } from '../../api/authentication/mfa';
 import {
@@ -35,14 +34,10 @@ import {
   TotpSecret
 } from './totp';
 import {
-  FactorId,
-  MultiFactorAssertion,
-  TotpMultiFactorAssertion
-} from '../../model/public_types';
+  FactorId, TotpMultiFactorAssertion} from '../../model/public_types';
 import { AuthErrorCode } from '../../core/errors';
 import { AppName } from '../../model/auth';
 import { _castAuth } from '../../core/auth/auth_impl';
-import { MultiFactorResolver } from '@firebase/auth-types';
 import { MultiFactorAssertionImpl } from '../mfa_assertion';
 import { FirebaseError } from '@firebase/util';
 
@@ -260,21 +255,15 @@ describe('Testing signIn Flow', () => {
 
   it('should throw Firebase Error if enrollment-id is undefined', async () => {
     let enrollmentId: string;
-    let response: any;
+    let _response: FinalizeMfaResponse;
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
       enrollmentId,
       '123456'
     ) as any;
 
-    const mock = mockEndpoint(
-      Endpoint.FINALIZE_MFA_SIGN_IN,
-      totpSignInResponse
-    );
-    //console.log("response: ",await assertion._process(auth,session));
-
     try {
-      response = await assertion._process(auth, session);
+      _response = await assertion._process(auth, session);
     } catch (e) {
       expect(e).to.be.an.instanceOf(FirebaseError);
       expect(e.message).to.eql('Firebase: Error (auth/argument-error).');
@@ -283,20 +272,15 @@ describe('Testing signIn Flow', () => {
 
   it('should throw Firebase Error if otp is undefined', async () => {
     let otp: string;
-    let response: any;
+    let _response: FinalizeMfaResponse;
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
       'enrollment-id',
       otp
     ) as any;
 
-    const mock = mockEndpoint(
-      Endpoint.FINALIZE_MFA_SIGN_IN,
-      totpSignInResponse
-    );
-
     try {
-      response = await assertion._process(auth, session);
+      _response = await assertion._process(auth, session);
     } catch (e) {
       expect(e).to.be.an.instanceOf(FirebaseError);
       expect(e.message).to.eql('Firebase: Error (auth/argument-error).');
