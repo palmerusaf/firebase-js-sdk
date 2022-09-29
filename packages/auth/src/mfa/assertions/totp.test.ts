@@ -30,10 +30,11 @@ import {
   TotpMultiFactorGenerator,
   TotpSecret
 } from './totp';
-import { FactorId } from '../../model/public_types';
+import { FactorId, MultiFactorAssertion } from '../../model/public_types';
 import { AuthErrorCode } from '../../core/errors';
 import { AppName } from '../../model/auth';
 import { _castAuth } from '../../core/auth/auth_impl';
+import { MultiFactorResolver } from '@firebase/auth-types';
 
 use(chaiAsPromised);
 
@@ -206,7 +207,38 @@ describe('core/mfa/totp/assertions/TotpMultiFactorAssertionImpl', () => {
       });
     });
   });
+
+    
 });
+
+describe('Testing signIn', ()=>{
+  let auth: TestAuth;
+  let assertion: MultiFactorAssertion;
+  let totpSignInResponse: SignInRequest
+  beforeEach(async () => {
+    mockFetch.setUp();
+    auth = await testAuth();
+    assertion = TotpMultiFactorGenerator.assertionForSignIn('enrollment-id', '123456');
+  });
+  afterEach(mockFetch.tearDown);
+
+ 
+  it('should finalize mfa signin for totp', async ()=>{
+      const mock = mockEndpoint(
+        Endpoint.FINALIZE_MFA_ENROLLMENT,
+        serverResponse
+      );
+      const response = await assertion._process(auth, session);
+      expect(response).to.eql(serverResponse);
+      expect(mock.calls[0].request).to.eql({
+        idToken: 'enrollment-id-token',
+        totpVerificationInfo: {
+          verificationCode: '123456',
+        }
+      });
+      expect(session.auth).to.eql(auth);
+    })
+})
 
 describe('core/mfa/assertions/totp/TotpSecret', async () => {
   const serverResponse: StartTotpMfaEnrollmentResponse = {
