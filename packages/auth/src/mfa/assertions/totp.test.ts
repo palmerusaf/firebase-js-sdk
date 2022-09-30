@@ -253,7 +253,6 @@ describe('Testing signIn Flow', () => {
   });
 
   it('should throw Firebase Error if enrollment-id is undefined', async () => {
-    let enrollmentId: string;
     let _response: FinalizeMfaResponse;
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
@@ -270,7 +269,6 @@ describe('Testing signIn Flow', () => {
   });
 
   it('should throw Firebase Error if otp is undefined', async () => {
-    let otp: string;
     let _response: FinalizeMfaResponse;
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
