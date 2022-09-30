@@ -257,7 +257,7 @@ describe('Testing signIn Flow', () => {
     let _response: FinalizeMfaResponse;
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
-      enrollmentId,
+      undefined as any,
       '123456'
     ) as any;
 
@@ -275,7 +275,7 @@ describe('Testing signIn Flow', () => {
     totpSignInResponse = { 'verificationCode': '123456' } as any;
     assertion = TotpMultiFactorGenerator.assertionForSignIn(
       'enrollment-id',
-      otp
+      undefined as any
     ) as any;
 
     try {
